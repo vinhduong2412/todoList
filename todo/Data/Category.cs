@@ -7,9 +7,7 @@ namespace todo.Data
     public class Category
     {
         [Key]
-        public int CId { get; set; }
+        public int CategoryId { get; set; } 
         public string CategoryName { get; set; }
-
-        public virtual ICollection<Category> Categories { get; set; }
     }
 }

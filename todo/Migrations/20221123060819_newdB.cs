@@ -51,19 +51,16 @@ namespace todo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "todoTask",
+                name: "Category",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Status = table.Column<bool>(type: "bit", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", maxLength: 100, nullable: true)
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_todoTask", x => x.Id);
+                    table.PrimaryKey("PK_Category", x => x.CategoryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,6 +169,29 @@ namespace todo.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "todoTask",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", maxLength: 100, nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_todoTask", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_todoTask_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
+                        principalColumn: "CategoryId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -210,6 +230,11 @@ namespace todo.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_todoTask_CategoryId",
+                table: "todoTask",
+                column: "CategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -237,6 +262,9 @@ namespace todo.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Category");
         }
     }
 }

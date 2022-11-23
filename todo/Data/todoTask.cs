@@ -15,8 +15,8 @@ namespace todo.Data
         public string? Description { get; set; }
         [MaxLength(100)]
         public DateTime? Date { get; set; }
-        public int? CId { get; set; }
-        [ForeignKey("CId")]
+        public int? CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
         public Category Category { get; set; }
     }
 }

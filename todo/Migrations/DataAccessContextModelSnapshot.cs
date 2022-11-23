@@ -157,22 +157,17 @@ namespace todo.Migrations
 
             modelBuilder.Entity("todo.Data.Category", b =>
                 {
-                    b.Property<int>("CId")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CId"), 1L, 1);
-
-                    b.Property<int?>("CategoryCId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CId");
-
-                    b.HasIndex("CategoryCId");
+                    b.HasKey("CategoryId");
 
                     b.ToTable("Category");
                 });
@@ -185,7 +180,8 @@ namespace todo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CId")
+                    b.Property<int?>("CategoryId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Date")
@@ -205,7 +201,7 @@ namespace todo.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("todoTask");
                 });
@@ -334,25 +330,15 @@ namespace todo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("todo.Data.Category", b =>
-                {
-                    b.HasOne("todo.Data.Category", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("CategoryCId");
-                });
-
             modelBuilder.Entity("todo.Data.todoTask", b =>
                 {
                     b.HasOne("todo.Data.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("todo.Data.Category", b =>
-                {
-                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

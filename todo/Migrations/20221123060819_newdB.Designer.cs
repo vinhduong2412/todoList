@@ -12,7 +12,7 @@ using todo.Data;
 namespace todo.Migrations
 {
     [DbContext(typeof(DataAccessContext))]
-    [Migration("20221123041340_newdB")]
+    [Migration("20221123060819_newdB")]
     partial class newdB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,6 +157,23 @@ namespace todo.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("todo.Data.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"), 1L, 1);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Category");
+                });
+
             modelBuilder.Entity("todo.Data.todoTask", b =>
                 {
                     b.Property<int>("Id")
@@ -164,6 +181,10 @@ namespace todo.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CategoryId")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Date")
                         .HasMaxLength(100)
@@ -181,6 +202,8 @@ namespace todo.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("todoTask");
                 });
@@ -307,6 +330,17 @@ namespace todo.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("todo.Data.todoTask", b =>
+                {
+                    b.HasOne("todo.Data.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
