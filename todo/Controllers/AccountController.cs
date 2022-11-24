@@ -2,7 +2,7 @@
 using todo.Models;
 using todo.Repositories;
 
-namespace todo.Controllers
+namespace Todo.Controllers
 {
     public class AccountController : ControllerBase
     {
