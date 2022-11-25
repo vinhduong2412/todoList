@@ -1,9 +1,9 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace todo.Models
+namespace Todo.DTOs
 {
-    public class todoTaskModel
+    public class todoTaskDTO
     {
         public int Id { get; set; }
         [MaxLength(100)]

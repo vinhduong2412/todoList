@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using todo.Data;
-using todo.Repositories;
+using Todo.Models;
+using Todo.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy 
     => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
@@ -24,20 +26,17 @@ builder.Services.AddDbContext<DataAccessContext>(options => {
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddScoped<ITaskRepo,TaskRepo>();
-builder.Services.AddScoped<IAccountRepo,AccountRepo>();
+builder.Services.AddScoped<ITaskService,TaskService>();
+builder.Services.AddScoped<IAccountService,AccountService>();
 
 builder.Services.AddIdentity<User, IdentityRole>().
     AddEntityFrameworkStores<DataAccessContext>().AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options => {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options => {
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    options.TokenValidationParameters = new TokenValidationParameters()
     {
         ValidateIssuer = true,
         ValidateAudience = true,

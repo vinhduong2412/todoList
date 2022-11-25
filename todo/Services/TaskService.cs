@@ -1,29 +1,30 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using todo.Data;
-using todo.Models;
+using Todo.Models;
+using Todo.DTOs;
 
-namespace todo.Repositories
+namespace Todo.Services
 {
-    public class TaskRepo : ITaskRepo
+    public class TaskService : ITaskService
     {
         private readonly DataAccessContext _context;
         private readonly IMapper _mapper;
-        public TaskRepo(DataAccessContext context, IMapper mapper)
+        public TaskService(DataAccessContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<int> AddtodoTaskAsync(todoTaskModel model)
+        public async Task<int> AddTodoTaskAsync(todoTaskDTO model)
         {
             var newTask = _mapper.Map<todoTask>(model);
             _context.todoTasks!.Add(newTask);
             await _context.SaveChangesAsync();
+
             return newTask.Id;
         }
 
-        public async Task DeletetodoTaskAsync(int id)
+        public async Task DeleteTodoTaskAsync(int id)
         {
             var deleteTask = _context.todoTasks!.SingleOrDefault(t => t.Id == id);
             if(deleteTask != null)
@@ -33,19 +34,19 @@ namespace todo.Repositories
             }
         }
 
-        public async Task<List<todoTaskModel>> GetAlltodoTasksAsync()
+        public async Task<List<todoTaskDTO>> GetAllTodoTasksAsync()
         {
             var task = await _context.todoTasks!.ToListAsync();
-            return _mapper.Map<List<todoTaskModel>>(task);
+            return _mapper.Map<List<todoTaskDTO>>(task);
         }
 
-        public async Task<todoTaskModel> GettodoTasksAsync(int id)
+        public async Task<todoTaskDTO> GetTodoTasksAsync(int id)
         {
             var task = await _context.todoTasks!.FindAsync(id);
-            return _mapper.Map<todoTaskModel>(task);
+            return _mapper.Map<todoTaskDTO>(task);
         }
 
-        public async Task UpdatetodoTaskAsync(int id, todoTaskModel model)
+        public async Task UpdateTodoTaskAsync(int id, todoTaskDTO model)
         {
             if(id == model.Id)
             {

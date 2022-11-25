@@ -3,39 +3,40 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using todo.Data;
-using todo.Models;
+using Todo.Models;
+using Todo.DTOs;
 
-namespace todo.Repositories
+namespace Todo.Services
 {
-    public class AccountRepo : IAccountRepo
+    public class AccountService : IAccountService
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IConfiguration configuration;
 
-        public AccountRepo(UserManager<User> userManager,
+        public AccountService(UserManager<User> userManager,
             SignInManager<User> signInManager, IConfiguration configuration)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
         }
-        public async Task<IdentityResult> SignUpAsync(SignUpModel model)
+        public async Task<IdentityResult> SignUpAsync(SignUpInput input)
         {
             var user = new User
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                UserName = model.Email
+                FirstName = input.FirstName,
+                LastName = input.LastName,
+                Email = input.Email,
+                UserName = input.Email
             };
 
-            return await userManager.CreateAsync(user, model.Password);
+            return await userManager.CreateAsync(user, input.Password);
         }
-        public async Task<string> SignInAsync(SignInModel model)
+        public async Task<string> SignInAsync(SignInInput model)
         {
-            var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(
+                model.Email, model.Password, false, false);
 
             if (!result.Succeeded)
             {

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace todo.Data
+namespace Todo.Models
 {
-    [Table("todoTask")]
+    [Table("todoTasks")]
     public class todoTask
     {
         [Key]
@@ -15,8 +15,8 @@ namespace todo.Data
         public string? Description { get; set; }
         [MaxLength(100)]
         public DateTime? Date { get; set; }
-        public int? CategoryId { get; set; }
-        [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
+        //public int? CategoryId { get; set; }
+        //[ForeignKey("CategoryId")]
+        //public Category Category { get; set; }
     }
 }

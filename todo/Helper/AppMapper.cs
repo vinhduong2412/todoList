@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
-using todo.Models;
-using todo.Data;
+using Todo.Models;
+using Todo.DTOs;
 
-namespace todo.Helper
+namespace Todo.Helper
 {
     public class AppMapper : Profile
     {
         public AppMapper()
         {
-            CreateMap<todoTask, todoTaskModel>().ReverseMap();
+            CreateMap<todoTask, todoTaskDTO>().ReverseMap();
         }
     }
 }

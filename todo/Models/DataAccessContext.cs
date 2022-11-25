@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace todo.Data
+namespace Todo.Models
 {
     public class DataAccessContext : IdentityDbContext<User>
     {
