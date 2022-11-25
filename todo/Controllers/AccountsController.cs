@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Todo.DTOs;
+using Todo.Models;
 using Todo.Services;
 
 namespace Todo.Controllers
@@ -16,18 +17,13 @@ namespace Todo.Controllers
         }
 
         [HttpPost("SignUp")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpInput input)
+        public async Task<IActionResult> SignUp([FromBody] SignUpDTO input)
         {
             var result = await accountRepo.SignUpAsync(input);
-
-            if (result.Succeeded)
-            {
-                return Ok(result.Succeeded);
-            }
-            return BadRequest();
+            return Ok(result);
         }
         [HttpPost("SignIn")]
-        public async Task<ActionResult> SignIn([FromBody] SignInInput input)
+        public async Task<ActionResult> SignIn([FromBody] SignInDTO input)
         {
             var result = await accountRepo.SignInAsync(input);
 

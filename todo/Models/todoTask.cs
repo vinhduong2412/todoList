@@ -13,7 +13,6 @@ namespace Todo.Models
         public bool? Status { get; set; }
         [MaxLength(100)]
         public string? Description { get; set; }
-        [MaxLength(100)]
         public DateTime? Date { get; set; }
         //public int? CategoryId { get; set; }
         //[ForeignKey("CategoryId")]

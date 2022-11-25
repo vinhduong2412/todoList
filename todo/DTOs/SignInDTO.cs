@@ -2,7 +2,7 @@
 
 namespace Todo.DTOs
 {
-    public class SignInInput
+    public class SignInDTO
     {
         [Required, EmailAddress]
         public string Email { get; set; }

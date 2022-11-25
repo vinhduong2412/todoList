@@ -38,7 +38,7 @@ namespace Todo.Controllers
         }    
         [HttpPost]
         
-        public async Task<IActionResult> PostTask(todoTaskDTO input)
+        public async Task<IActionResult> PostTask(todoTask input)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace Todo.Controllers
         }
         [HttpPut("{id}")]
         
-        public async Task<IActionResult> PutTask(int id, [FromBody] todoTaskDTO input)
+        public async Task<IActionResult> PutTask(int id, [FromBody] todoTask input)
         {
             if (id != input.Id)
             {

@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Text;
 using Todo.Models;
 using Todo.DTOs;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Todo.Services
 {
@@ -13,27 +15,31 @@ namespace Todo.Services
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IConfiguration configuration;
+        private readonly IMapper mapper;
 
         public AccountService(UserManager<User> userManager,
-            SignInManager<User> signInManager, IConfiguration configuration)
+            SignInManager<User> signInManager, IConfiguration configuration, IMapper mapper)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
+            this.mapper = mapper;
         }
-        public async Task<IdentityResult> SignUpAsync(SignUpInput input)
+        public async Task<ActionResult<SignUpDTO>> SignUpAsync(SignUpDTO input)
         {
+               
             var user = new User
             {
                 FirstName = input.FirstName,
                 LastName = input.LastName,
                 Email = input.Email,
-                UserName = input.Email
+                UserName = input.Email   
             };
-
-            return await userManager.CreateAsync(user, input.Password);
+            var newUser = mapper.Map<SignUpDTO>(user); 
+            await userManager.CreateAsync(user, input.Password);
+            return newUser;
         }
-        public async Task<string> SignInAsync(SignInInput model)
+        public async Task<string> SignInAsync(SignInDTO model)
         {
             var result = await signInManager.PasswordSignInAsync(
                 model.Email, model.Password, false, false);

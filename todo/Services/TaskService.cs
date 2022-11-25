@@ -15,10 +15,10 @@ namespace Todo.Services
             _mapper = mapper;
         }
 
-        public async Task<int> AddTodoTaskAsync(todoTaskDTO model)
+        public async Task<int> AddTodoTaskAsync(todoTask model)
         {
-            var newTask = _mapper.Map<todoTask>(model);
-            _context.todoTasks!.Add(newTask);
+            var newTask = _mapper.Map<todoTaskDTO>(model);
+            _context.todoTasks!.Add(model);
             await _context.SaveChangesAsync();
 
             return newTask.Id;
@@ -46,12 +46,12 @@ namespace Todo.Services
             return _mapper.Map<todoTaskDTO>(task);
         }
 
-        public async Task UpdateTodoTaskAsync(int id, todoTaskDTO model)
+        public async Task UpdateTodoTaskAsync(int id, todoTask model)
         {
             if(id == model.Id)
             {
-                var updateTask = _mapper.Map<todoTask>(model);
-                _context.todoTasks!.Update(updateTask);
+                var updateTask = _mapper.Map<todoTaskDTO>(model);
+                _context.todoTasks!.Update(model);
                 await _context.SaveChangesAsync();
             }
         }
