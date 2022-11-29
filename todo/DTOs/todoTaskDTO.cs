@@ -8,7 +8,7 @@ namespace Todo.DTOs
         [Key]
         public int Id { get; set; }
         [MaxLength(100)]
-        public string? Title { get; set; }
+        public string Title { get; set; }
         public bool? Status { get; set; }
         [MaxLength(100)]
         public string? Description { get; set; }

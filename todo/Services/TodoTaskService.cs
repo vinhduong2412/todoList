@@ -53,7 +53,7 @@ namespace Todo.Services
                 var updateTask = _mapper.Map<todoTaskDTO>(model);
                 _context.todoTasks!.Update(model);
                 await _context.SaveChangesAsync();
-                return updateTask;
+                return updateTask;  
             }
             else
             {
