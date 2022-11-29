@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Todo.Models
 {
     public class User : IdentityUser
     {
-        [required]
+        [Required]
         public string FirstName { get; set; } 
-        [required]
+        [Required]
         public string LastName { get; set; } 
     }
 }

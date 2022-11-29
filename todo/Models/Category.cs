@@ -9,6 +9,6 @@ namespace Todo.Models
         [Key]
         public int CategoryId { get; set; } 
         public string CategoryName { get; set; }
-        //public virtual ICollection<todoTask> Tasks { get; set; }
+        public virtual ICollection<todoTask> Tasks { get; set; }
     }
 }
