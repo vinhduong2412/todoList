@@ -26,7 +26,7 @@ builder.Services.AddDbContext<DataAccessContext>(options => {
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddScoped<ITaskService,TaskService>();
+builder.Services.AddScoped<ITodoTaskService,todoTaskService>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 
 builder.Services.AddIdentity<User, IdentityRole>().

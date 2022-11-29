@@ -11,7 +11,7 @@ namespace Todo.Models
         }
         #region DbSet
         public DbSet<todoTask>? todoTasks { get; set; }
-        public DbSet<Category>? categories { get; set; }
+        public DbSet<Category> categories { get; set; }
         #endregion  
     }
 }

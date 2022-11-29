@@ -9,32 +9,32 @@ namespace Todo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TasksController : ControllerBase
+    public class todoTasksController : ControllerBase
     {
-        private readonly ITaskService _taskRepo;
+        private readonly ITodoTaskService _todoTaskService;
 
-        public TasksController(ITaskService repo)
+        public todoTasksController(ITodoTaskService todoTaskService)
         {
-            _taskRepo = repo;
+            _todoTaskService = todoTaskService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAlltodoTasks()
+        public async Task<IActionResult> GetAllTodoTasks()
         {
             try
             {
-                return Ok(await _taskRepo.GetAllTodoTasksAsync());
+                return Ok(await _todoTaskService.GetAllTodoTasksAsync());
             }
             catch
             {
-                return BadRequest();
+                return StatusCode(500);
             }
         }
         [HttpGet("id")]
         public async Task<IActionResult> GetTaskById(int id)
         {
-            var task = await _taskRepo.GetTodoTasksAsync(id);
-            return task == null? NotFound() : Ok(task);
+            var task = await _todoTaskService.GetTodoTasksAsync(id);
+            return task == null? BadRequest() : Ok(task);
         }    
         [HttpPost]
         
@@ -42,9 +42,9 @@ namespace Todo.Controllers
         {
             try
             {
-                var newTaskId = await _taskRepo.AddTodoTaskAsync(input);
+                var newTaskId = await _todoTaskService.AddTodoTaskAsync(input);
                 
-                return newTaskId == null ? NotFound() : Ok(newTaskId);
+                return newTaskId == null ? BadRequest() : Ok(newTaskId);
             }
             catch
             {
@@ -57,10 +57,10 @@ namespace Todo.Controllers
         {
             if (id != input.Id)
             {
-                return NotFound();    
+                return BadRequest();    
             }
-            await _taskRepo.UpdateTodoTaskAsync(id, input);
-            return Ok("Update successfully");
+            var updateTask = await _todoTaskService.UpdateTodoTaskAsync(id,input);
+            return Ok(updateTask);
         }
         [HttpDelete("{id}")]
        
@@ -70,7 +70,7 @@ namespace Todo.Controllers
             {
                 return NotFound();
             }
-            await _taskRepo.DeleteTodoTaskAsync(id);
+            await _todoTaskService.DeleteTodoTaskAsync(id);
             return Ok("Delete successfully");
         }
     }

@@ -5,28 +5,28 @@ using Todo.DTOs;
 
 namespace Todo.Services
 {
-    public class TaskService : ITaskService
+    public class todoTaskService : ITodoTaskService
     {
         private readonly DataAccessContext _context;
         private readonly IMapper _mapper;
-        public TaskService(DataAccessContext context, IMapper mapper)
+        public todoTaskService(DataAccessContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<int> AddTodoTaskAsync(todoTask model)
+        public async Task<todoTaskDTO> AddTodoTaskAsync(todoTask model)
         {
             var newTask = _mapper.Map<todoTaskDTO>(model);
             _context.todoTasks!.Add(model);
             await _context.SaveChangesAsync();
 
-            return newTask.Id;
+            return newTask;
         }
 
         public async Task DeleteTodoTaskAsync(int id)
         {
-            var deleteTask = _context.todoTasks!.SingleOrDefault(t => t.Id == id);
+            var deleteTask = await _context.todoTasks!.FindAsync(id);
             if(deleteTask != null)
             {
                 _context.todoTasks!.Remove(deleteTask);
@@ -46,13 +46,18 @@ namespace Todo.Services
             return _mapper.Map<todoTaskDTO>(task);
         }
 
-        public async Task UpdateTodoTaskAsync(int id, todoTask model)
+        public async Task<todoTaskDTO> UpdateTodoTaskAsync(int id, todoTask model)
         {
             if(id == model.Id)
             {
                 var updateTask = _mapper.Map<todoTaskDTO>(model);
                 _context.todoTasks!.Update(model);
                 await _context.SaveChangesAsync();
+                return updateTask;
+            }
+            else
+            {
+                return null;
             }
         }
     }

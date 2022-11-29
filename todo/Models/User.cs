@@ -4,8 +4,9 @@ namespace Todo.Models
 {
     public class User : IdentityUser
     {
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
-
+        [required]
+        public string FirstName { get; set; } 
+        [required]
+        public string LastName { get; set; } 
     }
 }

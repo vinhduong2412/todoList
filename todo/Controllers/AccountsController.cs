@@ -9,23 +9,23 @@ namespace Todo.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly IAccountService accountRepo;
+        private readonly IAccountService _accountService;
 
-        public AccountsController(IAccountService repo)
+        public AccountsController(IAccountService accountService)
         {
-            accountRepo = repo;
+            _accountService = accountService;
         }
 
         [HttpPost("SignUp")]
         public async Task<IActionResult> SignUp([FromBody] SignUpDTO input)
         {
-            var result = await accountRepo.SignUpAsync(input);
+            var result = await _accountService.SignUpAsync(input);
             return Ok(result);
         }
         [HttpPost("SignIn")]
         public async Task<ActionResult> SignIn([FromBody] SignInDTO input)
         {
-            var result = await accountRepo.SignInAsync(input);
+            var result = await _accountService.SignInAsync(input);
 
             if (string.IsNullOrEmpty(result))
             {
