@@ -8,9 +8,11 @@ namespace Todo.Helper
     {
         public AppMapper()
         {
-            CreateMap<todoTask, todoTaskDTO>().ReverseMap();
+            CreateMap<TodoTask, TodoTaskDTO>().ReverseMap();
             CreateMap<User, SignUpDTO>();
             CreateMap<User, SignInDTO>();
+            CreateMap<Category, CategoryDTO>();
+            CreateMap<TodoTask, todoTaskStatusDTO>().ReverseMap();
         }
     }
 }

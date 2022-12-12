@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Todo.Models
 {
@@ -8,6 +9,7 @@ namespace Todo.Models
         [Required]
         public string FirstName { get; set; } 
         [Required]
-        public string LastName { get; set; } 
+        public string LastName { get; set; }
+        public ICollection<TodoTask> todoTasks { get; set; }
     }
 }

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Todo.Models;
 using Todo.DTOs;
 
+
+
 namespace Todo.Services
 {
     public class todoTaskService : ITodoTaskService
@@ -14,44 +16,63 @@ namespace Todo.Services
             _context = context;
             _mapper = mapper;
         }
-
-        public async Task<todoTaskDTO> AddTodoTaskAsync(todoTask model)
+        public async Task<TodoTaskDTO> AddTodoTaskAsync(TodoTaskDTO model)
         {
-            var newTask = _mapper.Map<todoTaskDTO>(model);
-            _context.todoTasks!.Add(model);
+            var newTask = _mapper.Map<TodoTask>(model);
+            _context.TodoTasks!.Add(newTask);
             await _context.SaveChangesAsync();
 
-            return newTask;
+            return model;
         }
 
         public async Task DeleteTodoTaskAsync(int id)
         {
-            var deleteTask = await _context.todoTasks!.FindAsync(id);
+            var deleteTask = await _context.TodoTasks!.FindAsync(id);
             if(deleteTask != null)
             {
-                _context.todoTasks!.Remove(deleteTask);
+                _context.TodoTasks!.Remove(deleteTask);
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task<List<todoTaskDTO>> GetAllTodoTasksAsync()
+        public async Task<List<TodoTaskDTO>> GetAllTodoTasksAsync()
         {
-            var task = await _context.todoTasks!.ToListAsync();
-            return _mapper.Map<List<todoTaskDTO>>(task);
+            var task = await _context.TodoTasks!.ToListAsync();
+            return _mapper.Map<List<TodoTaskDTO>>(task);
         }
 
-        public async Task<todoTaskDTO> GetTodoTasksAsync(int id)
+        public async Task<List<TodoTask>> GetTasksByDateAsync(DateTime Date)
         {
-            var task = await _context.todoTasks!.FindAsync(id);
-            return _mapper.Map<todoTaskDTO>(task);
-        }
-
-        public async Task<todoTaskDTO> UpdateTodoTaskAsync(int id, todoTask model)
-        {
-            if(id == model.Id)
+            var Task = await _context.TodoTasks.Where(t => t.Date == Date).ToListAsync();
+            if (Task == null)
             {
-                var updateTask = _mapper.Map<todoTaskDTO>(model);
-                _context.todoTasks!.Update(model);
+                return null;
+            }
+            return Task;
+        }
+
+        public async Task<List<TodoTask>> GetTasksByStatusAsync(bool Status)
+        {
+            var Task = await _context.TodoTasks.Where(t => t.Status == Status).ToListAsync();
+            if (Task == null)
+            {
+                return null;
+            }
+            return Task;
+        }
+
+        public async Task<TodoTaskDTO> GetTodoTasksAsync(int id)
+        {
+            var task = await _context.TodoTasks!.FindAsync(id);
+            return _mapper.Map<TodoTaskDTO>(task);
+        }
+
+        public async Task<TodoTaskDTO> UpdateTodoTaskAsync(int id, TodoTask model)
+        {
+            if(id == model.TaskId)
+            {
+                var updateTask = _mapper.Map<TodoTaskDTO>(model);
+                _context.TodoTasks!.Update(model);
                 await _context.SaveChangesAsync();
                 return updateTask;  
             }

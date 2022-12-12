@@ -12,7 +12,7 @@ using Todo.Models;
 namespace Todo.Migrations
 {
     [DbContext(typeof(DataAccessContext))]
-    [Migration("20221125100206_newdB")]
+    [Migration("20221130030445_newdB")]
     partial class newdB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,32 +172,83 @@ namespace Todo.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Work"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Family"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Birth"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "School"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryName = "Healthcare"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Pet"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Exercicse"
+                        });
                 });
 
             modelBuilder.Entity("Todo.Models.todoTask", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TaskId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TaskId"), 1L, 1);
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Date")
-                        .HasMaxLength(100)
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("Id")
+                        .HasColumnType("int");
 
                     b.Property<bool?>("Status")
                         .HasColumnType("bit");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TaskId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("todoTasks");
                 });
@@ -324,6 +375,27 @@ namespace Todo.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Todo.Models.todoTask", b =>
+                {
+                    b.HasOne("Todo.Models.Category", null)
+                        .WithMany("todoTasks")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("Todo.Models.User", null)
+                        .WithMany("todoTasks")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Todo.Models.Category", b =>
+                {
+                    b.Navigation("todoTasks");
+                });
+
+            modelBuilder.Entity("Todo.Models.User", b =>
+                {
+                    b.Navigation("todoTasks");
                 });
 #pragma warning restore 612, 618
         }

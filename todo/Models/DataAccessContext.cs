@@ -10,8 +10,49 @@ namespace Todo.Models
 
         }
         #region DbSet
-        public DbSet<todoTask>? todoTasks { get; set; }
-        public DbSet<Category> categories { get; set; }
+        public DbSet<TodoTask> TodoTasks { get; set; }
+        public DbSet<Category> Categories { get; set; }
         #endregion  
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    CategoryId = 1,
+                    CategoryName = "Work"
+                },
+                new Category
+                {
+                    CategoryId = 2,
+                    CategoryName = "Family"
+                },
+                new Category
+                {
+                    CategoryId = 3,
+                    CategoryName = "Birth"
+                },
+                new Category
+                {
+                    CategoryId = 4,
+                    CategoryName = "School"
+                },
+                new Category
+                {
+                    CategoryId = 5,
+                    CategoryName = "Healthcare"
+                },
+                new Category
+                {
+                    CategoryId = 6,
+                    CategoryName = "Pet"
+                },
+                new Category 
+                { 
+                    CategoryId = 7,
+                    CategoryName = "Exercicse"
+                }
+            );
+        }
     }
 }

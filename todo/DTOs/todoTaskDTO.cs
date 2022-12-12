@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Todo.DTOs
 {
-    public class todoTaskDTO
+    public class TodoTaskDTO
     {
-        [Key]
-        public int Id { get; set; }
         [MaxLength(100)]
         public string Title { get; set; }
         public bool? Status { get; set; }
