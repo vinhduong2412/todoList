@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Todo.Models;
 using Todo.DTOs;
 using Todo.Services;
+using System.Security.Claims;
 
 namespace Todo.Controllers
 {
@@ -84,6 +85,12 @@ namespace Todo.Controllers
         {
             var Task = await _todoTaskService.GetTasksByDateAsync(Date);
             return Task == null ? BadRequest() : Ok(Task);
+        }
+        [HttpPatch("tasks/complete")]
+        public async Task<IActionResult> CompleteTask([FromBody] List<int> id)
+        {
+            await _todoTaskService.CompleteTaskAsync(id);
+            return Ok("Task completed");
         }
     }
 }

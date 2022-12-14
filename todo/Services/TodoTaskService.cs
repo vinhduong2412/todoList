@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Todo.Models;
 using Todo.DTOs;
-
-
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Todo.Services
 {
@@ -16,6 +15,7 @@ namespace Todo.Services
             _context = context;
             _mapper = mapper;
         }
+        const bool Done = false;
         public async Task<TodoTaskDTO> AddTodoTaskAsync(TodoTaskDTO model)
         {
             var newTask = _mapper.Map<TodoTask>(model);
@@ -23,6 +23,18 @@ namespace Todo.Services
             await _context.SaveChangesAsync();
 
             return model;
+        }
+
+        public async Task CompleteTaskAsync(List<int> id)
+        {
+            var task = await _context.TodoTasks.Where(c 
+                => id.Contains(c.TaskId)).ToListAsync();
+            foreach (var x in task)
+            {
+                x.Status = Done;
+            }
+            _context.UpdateRange(task);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteTodoTaskAsync(int id)
@@ -51,9 +63,11 @@ namespace Todo.Services
             return Task;
         }
 
+
         public async Task<List<TodoTask>> GetTasksByStatusAsync(bool Status)
         {
-            var Task = await _context.TodoTasks.Where(t => t.Status == Status).ToListAsync();
+            var Task = await _context.TodoTasks.Where(t 
+                => t.Status == Status).ToListAsync();
             if (Task == null)
             {
                 return null;

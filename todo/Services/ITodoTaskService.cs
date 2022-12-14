@@ -13,5 +13,6 @@ namespace Todo.Services
         public Task DeleteTodoTaskAsync(int id);
         public Task<List<TodoTask>> GetTasksByStatusAsync(bool Status);
         public Task<List<TodoTask>> GetTasksByDateAsync(DateTime Date);
+        public Task CompleteTaskAsync(List<int> id);
     }
 }
