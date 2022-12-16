@@ -25,7 +25,7 @@ namespace Todo.Services
             this.configuration = configuration;
             this.mapper = mapper;
         }
-        public async Task<ActionResult<SignUpDTO>> SignUpAsync(SignUpDTO input)
+        public async Task<ActionResult<SignUpRequestDTO>> SignUpAsync(SignUpRequestDTO input)
         {
                
             var user = new User
@@ -35,11 +35,11 @@ namespace Todo.Services
                 Email = input.Email,
                 UserName = input.Email   
             };
-            var newUser = mapper.Map<SignUpDTO>(user); 
+            var newUser = mapper.Map<SignUpRequestDTO>(user); 
             await userManager.CreateAsync(user, input.Password);
             return newUser;
         }
-        public async Task<string> SignInAsync(SignInDTO model)
+        public async Task<string> SignInAsync(SignInRequestDTO model)
         {
             var result = await signInManager.PasswordSignInAsync(
                 model.Email, model.Password, false, false);

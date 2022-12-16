@@ -10,6 +10,6 @@ namespace Todo.Models
         public string FirstName { get; set; } 
         [Required]
         public string LastName { get; set; }
-        public ICollection<TodoTask> todoTasks { get; set; }
+        public ICollection<TodoTask> TodoTasks { get; set; }
     }
 }

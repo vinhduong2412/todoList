@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Todo.DTOs
 {
-    public class SignUpDTO
+    public class SignUpRequestDTO
     {
         [Required]
         public string FirstName { get; set; }

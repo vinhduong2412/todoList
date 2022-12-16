@@ -5,6 +5,7 @@ using Todo.Models;
 using Todo.DTOs;
 using Todo.Services;
 using System.Security.Claims;
+using AutoMapper;
 
 namespace Todo.Controllers
 {
@@ -13,10 +14,12 @@ namespace Todo.Controllers
     public class TodoTasksController : ControllerBase
     {
         private readonly ITodoTaskService _todoTaskService;
+        private readonly IMapper _mapper;
 
-        public TodoTasksController(ITodoTaskService todoTaskService)
+        public TodoTasksController(ITodoTaskService todoTaskService, IMapper mapper)
         {
             _todoTaskService = todoTaskService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -39,12 +42,11 @@ namespace Todo.Controllers
         }
         [HttpPost]
 
-        public async Task<IActionResult> PostTask(TodoTaskDTO input)
+        public async Task<ActionResult<TodoTaskResponseDTO>> PostTask(TodoTaskRequestDTO input)
         {
             try
             {
                 var newTaskId = await _todoTaskService.AddTodoTaskAsync(input);
-
                 return newTaskId == null ? BadRequest() : Ok(newTaskId);
             }
             catch
@@ -54,7 +56,7 @@ namespace Todo.Controllers
         }
         [HttpPut("{id}")]
 
-        public async Task<IActionResult> PutTask(int id, [FromBody] TodoTask input)
+        public async Task<ActionResult<TodoTaskResponseDTO>> PutTask(int id, [FromBody] TodoTaskRequestByIdDTO input)
         {
             if (id != input.TaskId)
             {
@@ -65,11 +67,11 @@ namespace Todo.Controllers
         }
         [HttpDelete("{id}")]
 
-        public async Task<IActionResult> DeleteBook([FromRoute] int id, TodoTask model)
+        public async Task<ActionResult> DeleteBook([FromRoute] int id, TodoTask model)
         {
             if (id != model.TaskId)
             {
-                return NotFound();
+                return NotFound(new ErrorResponse("Invalid Task id"));
             }
             await _todoTaskService.DeleteTodoTaskAsync(id);
             return Ok("Delete successfully");

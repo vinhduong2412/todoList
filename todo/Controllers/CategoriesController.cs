@@ -15,7 +15,7 @@ namespace Todo.Controllers
             _categoryService = categoryService;
         }
         [HttpGet("categories")]
-        public async Task<IActionResult> getCategory()
+        public async Task<IActionResult> GetCategory()
         {
             try
             {

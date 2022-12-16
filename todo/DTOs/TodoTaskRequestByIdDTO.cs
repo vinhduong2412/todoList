@@ -1,14 +1,10 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-
-namespace Todo.DTOs
+﻿namespace Todo.DTOs
 {
-    public class TodoTaskDTO
+    public class TodoTaskRequestByIdDTO
     {
-        [MaxLength(100)]
+        public int TaskId { get; set; }
         public string Title { get; set; }
         public bool? Status { get; set; }
-        [MaxLength(100)]
         public string? Description { get; set; }
         public DateTime? Date { get; set; }
     }

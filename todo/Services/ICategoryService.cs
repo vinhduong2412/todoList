@@ -5,6 +5,6 @@ namespace Todo.Services
 {
     public interface ICategoryService
     {
-        Task<List<CategoryDTO>> GetCategory();
+        Task<List<CategoryRequestDTO>> GetCategory();
     }
 }
