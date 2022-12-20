@@ -16,20 +16,21 @@ namespace Todo.Services
             _mapper = mapper;
         }
         const bool Done = false;
-        public async Task<TodoTaskResponseDTO> AddTodoTaskAsync(TodoTaskRequestDTO model)
+        public async Task<TodoTaskResponseDTO> AddTodoTaskAsync(int UserId, TodoTaskRequestDTO model)
         {
-            var newTask = _mapper.Map<TodoTask>(model);
+            var newTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
+                => c.Id == UserId);
+            newTask = _mapper.Map<TodoTask>(model);
             _context.TodoTasks.Add(newTask);
-            var response = _mapper.Map<TodoTaskResponseDTO>(newTask);
             await _context.SaveChangesAsync();
 
-            return response;
+            return _mapper.Map<TodoTaskResponseDTO>(newTask); ;
         }
 
-        public async Task CompleteTaskAsync(List<int> id)
+        public async Task CompleteTaskAsync(int UserId, List<int> id)
         {
             var task = await _context.TodoTasks.Where(c 
-                => id.Contains(c.TaskId)).ToListAsync();
+                => id.Contains(c.TaskId) && c.Id == UserId).ToListAsync();
             foreach (var x in task)
             {
                 x.Status = Done;
@@ -38,9 +39,10 @@ namespace Todo.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteTodoTaskAsync(int id)
+        public async Task DeleteTodoTaskAsync(int UserId, int id)
         {
-            var deleteTask = await _context.TodoTasks.FindAsync(id);
+            var deleteTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
+                => c.Id == UserId && c.TaskId == id);
             if(deleteTask != null)
             {
                 _context.TodoTasks.Remove(deleteTask);
@@ -48,51 +50,40 @@ namespace Todo.Services
             }
         }
 
-        public async Task<List<TodoTaskResponseDTO>> GetAllTodoTasksAsync()
+        public async Task<List<TodoTask>> GetTodoTasksAsync(int UserId, FilterRequestDTO model)
         {
-            var task = await _context.TodoTasks.ToListAsync();
-            return _mapper.Map<List<TodoTaskResponseDTO>>(task);
-        }
+            var querry = _context.TodoTasks.Where(c => c.Id == UserId);
+            
+            if (model.Status != null)
+            {
+                querry = querry.Where(t => t.Status == model.Status);
+            }
 
-        public async Task<List<TodoTaskResponseDTO>> GetTasksByDateAsync(DateTime Date)
+            if (model.Date != null)
+            {
+                querry = querry.Where(c => c.Date == model.Date);
+            }
+            return await querry.ToListAsync();
+        }
+        public async Task<TodoTaskResponseDTO> GetTodoTasksAsync(int UserId, int id)
         {
-            var Task = await _context.TodoTasks.Where(t => t.Date == Date).ToListAsync();
-            var response = _mapper.Map<List<TodoTaskResponseDTO>>(Task);
-            if (Task == null)
+            var task = await _context.TodoTasks.FirstOrDefaultAsync(c => c.Id == UserId && c.Id == id);
+            if (task == null)
             {
                 return null;
             }
-            return response;
-        }
-
-
-        public async Task<List<TodoTaskResponseDTO>> GetTasksByStatusAsync(bool Status)
-        {
-            var Task = await _context.TodoTasks.Where(t 
-                => t.Status == Status).ToListAsync();
-            var response = _mapper.Map<List<TodoTaskResponseDTO>>(Task);
-            if (Task == null)
-            {
-                return null;
-            }
-            return response;
-        }
-
-        public async Task<TodoTaskResponseDTO> GetTodoTasksAsync(int id)
-        {
-            var task = await _context.TodoTasks.FindAsync(id);
             return _mapper.Map<TodoTaskResponseDTO>(task);
         }
 
-        public async Task<TodoTaskResponseDTO> UpdateTodoTaskAsync(int id, TodoTaskRequestByIdDTO model)
+        public async Task<TodoTaskResponseDTO> UpdateTodoTaskAsync(int UserId, int id, TodoTaskRequestByIdDTO model)
         {
             if(id == model.TaskId)
             {
-                var updateTask = _mapper.Map<TodoTask>(model);
+                var updateTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
+                    => c.Id == UserId && c.TaskId == id);
                 _context.TodoTasks.Update(updateTask);
-                var response = _mapper.Map<TodoTaskResponseDTO>(updateTask);
                 await _context.SaveChangesAsync();
-                return response;  
+                return _mapper.Map<TodoTaskResponseDTO>(updateTask);  
             }
             else
             {

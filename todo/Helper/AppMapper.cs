@@ -12,10 +12,12 @@ namespace Todo.Helper
             CreateMap<User, SignUpRequestDTO>();
             CreateMap<User, SignInRequestDTO>();
             CreateMap<Category, CategoryRequestDTO>();
-            CreateMap<SignUpRequestDTO, UserResponse>();
+            CreateMap<Category, CategoryResponseDTO>();
+            CreateMap<User, UserResponse>();
             CreateMap<SignInRequestDTO, UserResponse>();
             CreateMap<TodoTask, TodoTaskResponseDTO>().ReverseMap();
             CreateMap<TodoTask, TodoTaskRequestByIdDTO>().ReverseMap();
+            CreateMap<TodoTask, FilterRequestDTO>().ReverseMap();
         }
     }
 }

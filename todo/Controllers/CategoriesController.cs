@@ -9,10 +9,12 @@ namespace Todo.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly ILogger<CategoriesController> _logger;
 
-        public CategoriesController (ICategoryService categoryService)
+        public CategoriesController (ICategoryService categoryService, ILogger<CategoriesController> logger)
         {
             _categoryService = categoryService;
+            _logger = logger;
         }
         [HttpGet("categories")]
         public async Task<IActionResult> GetCategory()
@@ -23,6 +25,7 @@ namespace Todo.Controllers
             }
             catch
             {
+                _logger.LogWarning("Internal Server Error");
                 return StatusCode(500);
             }
         }

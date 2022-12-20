@@ -15,10 +15,10 @@ namespace Todo.Services
             _context = context;
             _mapper = mapper;
         }
-        public async Task<List<CategoryRequestDTO>> GetCategory()
+        public async Task<List<CategoryResponseDTO>> GetCategory()
         {
-            var task = await _context.Categories!.ToListAsync();
-            return _mapper.Map<List<CategoryRequestDTO>>(task);
+            var task = await _context.Categories.ToListAsync();
+            return _mapper.Map<List<CategoryResponseDTO>>(task);
         }
     }
 }

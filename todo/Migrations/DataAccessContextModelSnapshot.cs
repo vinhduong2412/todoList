@@ -209,7 +209,7 @@ namespace Todo.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Todo.Models.todoTask", b =>
+            modelBuilder.Entity("Todo.Models.TodoTask", b =>
                 {
                     b.Property<int>("TaskId")
                         .ValueGeneratedOnAdd()
@@ -375,14 +375,14 @@ namespace Todo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Todo.Models.todoTask", b =>
+            modelBuilder.Entity("Todo.Models.TodoTask", b =>
                 {
                     b.HasOne("Todo.Models.Category", null)
                         .WithMany("todoTasks")
                         .HasForeignKey("CategoryId");
 
                     b.HasOne("Todo.Models.User", null)
-                        .WithMany("todoTasks")
+                        .WithMany("TodoTasks")
                         .HasForeignKey("UserId");
                 });
 
@@ -393,7 +393,7 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("Todo.Models.User", b =>
                 {
-                    b.Navigation("todoTasks");
+                    b.Navigation("TodoTasks");
                 });
 #pragma warning restore 612, 618
         }

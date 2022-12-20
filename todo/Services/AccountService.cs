@@ -12,20 +12,20 @@ namespace Todo.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
-        private readonly IConfiguration configuration;
-        private readonly IMapper mapper;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
         public AccountService(UserManager<User> userManager,
             SignInManager<User> signInManager, IConfiguration configuration, IMapper mapper)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.configuration = configuration;
-            this.mapper = mapper;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _configuration = configuration;
+            _mapper = mapper;
         }
-        public async Task<ActionResult<SignUpRequestDTO>> SignUpAsync(SignUpRequestDTO input)
+        public async Task<ActionResult<UserResponse>> SignUpAsync(SignUpRequestDTO input)
         {
                
             var user = new User
@@ -33,15 +33,15 @@ namespace Todo.Services
                 FirstName = input.FirstName,
                 LastName = input.LastName,
                 Email = input.Email,
-                UserName = input.Email   
+                UserName = input.Email
             };
-            var newUser = mapper.Map<SignUpRequestDTO>(user); 
-            await userManager.CreateAsync(user, input.Password);
+            await _userManager.CreateAsync(user, input.Password);
+            var newUser = _mapper.Map<UserResponse>(user);
             return newUser;
         }
         public async Task<string> SignInAsync(SignInRequestDTO model)
         {
-            var result = await signInManager.PasswordSignInAsync(
+            var result = await _signInManager.PasswordSignInAsync(
                 model.Email, model.Password, false, false);
 
             if (!result.Succeeded)
@@ -56,11 +56,11 @@ namespace Todo.Services
             };
 
             var authenKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(configuration["JWT:Key"]));
+                Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
 
             var token = new JwtSecurityToken(
-                issuer: configuration["JWT:ValidIssuer"],
-                audience: configuration["JWT:ValidAudience"],
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddMinutes(30),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(
