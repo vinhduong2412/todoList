@@ -7,7 +7,7 @@ namespace Todo.Services
 {
     public interface IAccountService
     {
-        Task<ActionResult<UserResponse>> SignUpAsync(SignUpRequestDTO model);
+        Task<IdentityResult> SignUpAsync(SignUpRequestDTO model);
         Task<string> SignInAsync(SignInRequestDTO model);
     }
 }

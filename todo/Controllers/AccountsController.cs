@@ -23,16 +23,15 @@ namespace Todo.Controllers
         }
 
         [HttpPost("SignUp")]
-        public async Task<ActionResult<UserResponse>> SignUp([FromBody] SignUpRequestDTO input)
+        public async Task<IActionResult> SignUp([FromBody] SignUpRequestDTO input)
         {
             var newUser = await _accountService.SignUpAsync(input);
             return Ok(newUser);
         }
         [HttpPost("SignIn")]
-        public async Task<ActionResult<UserResponse>> SignIn([FromBody] SignInRequestDTO input)
+        public async Task<IActionResult> SignIn([FromBody] SignInRequestDTO input)
         {
-            await _accountService.SignInAsync(input);
-            var result = _mapper.Map<UserResponse>(input);
+            var result = await _accountService.SignInAsync(input);
             if (result == null)
             {
                 _logger.LogWarning("Account does not exist");
