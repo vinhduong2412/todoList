@@ -12,6 +12,7 @@ namespace Todo.Models
         #region DbSet
         public DbSet<TodoTask> TodoTasks { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<User> Users { get; set; }
         #endregion  
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

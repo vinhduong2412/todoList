@@ -51,19 +51,6 @@ namespace Todo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
-                columns: table => new
-                {
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -170,6 +157,25 @@ namespace Todo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                    table.ForeignKey(
+                        name: "FK_Categories_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "todoTasks",
                 columns: table => new
                 {
@@ -179,7 +185,7 @@ namespace Todo.Migrations
                     Status = table.Column<bool>(type: "bit", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: true),
-                    Id = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -200,16 +206,16 @@ namespace Todo.Migrations
 
             migrationBuilder.InsertData(
                 table: "Categories",
-                columns: new[] { "CategoryId", "CategoryName" },
+                columns: new[] { "CategoryId", "CategoryName", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "Work" },
-                    { 2, "Family" },
-                    { 3, "Birth" },
-                    { 4, "School" },
-                    { 5, "Healthcare" },
-                    { 6, "Pet" },
-                    { 7, "Exercicse" }
+                    { 1, "Work", null },
+                    { 2, "Family", null },
+                    { 3, "Birth", null },
+                    { 4, "School", null },
+                    { 5, "Healthcare", null },
+                    { 6, "Pet", null },
+                    { 7, "Exercicse", null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -252,6 +258,11 @@ namespace Todo.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_UserId",
+                table: "Categories",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_todoTasks_CategoryId",
                 table: "todoTasks",
                 column: "CategoryId");
@@ -286,10 +297,10 @@ namespace Todo.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "AspNetUsers");
         }
     }
 }

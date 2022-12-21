@@ -16,14 +16,16 @@ namespace Todo.Services
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly DataAccessContext _context;
 
         public AccountService(UserManager<User> userManager,
-            SignInManager<User> signInManager, IConfiguration configuration, IMapper mapper)
+            SignInManager<User> signInManager, IConfiguration configuration, IMapper mapper, DataAccessContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
             _mapper = mapper;
+            _context = context;
         }
         public async Task<IdentityResult> SignUpAsync(SignUpRequestDTO input)
         {
@@ -46,9 +48,10 @@ namespace Todo.Services
             {
                 return string.Empty;
             }
-
+            var user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
             var authClaims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Email, model.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"]),

@@ -12,7 +12,7 @@ using Todo.Models;
 namespace Todo.Migrations
 {
     [DbContext(typeof(DataAccessContext))]
-    [Migration("20221220085605_newdB")]
+    [Migration("20221221082147_newdB")]
     partial class newdB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,7 +169,12 @@ namespace Todo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("CategoryId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
 
@@ -230,8 +235,8 @@ namespace Todo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("Status")
                         .HasColumnType("bit");
@@ -377,6 +382,13 @@ namespace Todo.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Todo.Models.Category", b =>
+                {
+                    b.HasOne("Todo.Models.User", null)
+                        .WithMany("CategoryTasks")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Todo.Models.TodoTask", b =>
                 {
                     b.HasOne("Todo.Models.Category", null)
@@ -395,6 +407,8 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("Todo.Models.User", b =>
                 {
+                    b.Navigation("CategoryTasks");
+
                     b.Navigation("TodoTasks");
                 });
 #pragma warning restore 612, 618

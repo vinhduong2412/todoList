@@ -11,5 +11,6 @@ namespace Todo.DTOs
         [MaxLength(100)]
         public string? Description { get; set; }
         public DateTime? Date { get; set; }
+        public int? CategoryId { get; set; }
     }
 }
