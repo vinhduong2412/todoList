@@ -16,7 +16,7 @@ namespace Todo.Services
             _mapper = mapper;
         }
         const bool Done = false;
-        public async Task<TodoTaskResponseDTO> AddTodoTaskAsync(int UserId, TodoTaskRequestDTO model)
+        public async Task<TodoTaskResponseDTO> AddTodoTaskAsync(string UserId, TodoTaskRequestDTO model)
         {
             var newTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
                 => c.Id == UserId);
@@ -27,7 +27,7 @@ namespace Todo.Services
             return _mapper.Map<TodoTaskResponseDTO>(newTask); ;
         }
 
-        public async Task CompleteTaskAsync(int UserId, List<int> id)
+        public async Task CompleteTaskAsync(string UserId, List<int> id)
         {
             var task = await _context.TodoTasks.Where(c 
                 => id.Contains(c.TaskId) && c.Id == UserId).ToListAsync();
@@ -39,7 +39,7 @@ namespace Todo.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteTodoTaskAsync(int UserId, int id)
+        public async Task DeleteTodoTaskAsync(string UserId, int id)
         {
             var deleteTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
                 => c.Id == UserId && c.TaskId == id);
@@ -50,24 +50,29 @@ namespace Todo.Services
             }
         }
 
-        public async Task<List<TodoTask>> GetTodoTasksAsync(int UserId, FilterRequestDTO model)
+        public async Task<List<TodoTask>> GetTodoTasksAsync(string UserId, FilterRequestDTO model)
         {
             var querry = _context.TodoTasks.Where(c => c.Id == UserId);
             
             if (model.Status != null)
             {
                 querry = querry.Where(t => t.Status == model.Status);
+                return await querry.ToListAsync();
             }
 
             if (model.Date != null)
             {
                 querry = querry.Where(c => c.Date == model.Date);
+                return await querry.ToListAsync();
             }
-            return await querry.ToListAsync();
+            else
+            {
+                return await _context.TodoTasks.ToListAsync();
+            }
         }
-        public async Task<TodoTaskResponseDTO> GetTodoTasksAsync(int UserId, int id)
+        public async Task<TodoTaskResponseDTO> GetTodoTasksAsync(string UserId, int id)
         {
-            var task = await _context.TodoTasks.FirstOrDefaultAsync(c => c.Id == UserId && c.Id == id);
+            var task = await _context.TodoTasks.FirstOrDefaultAsync(c => c.Id == UserId && c.TaskId == id);
             if (task == null)
             {
                 return null;
@@ -75,7 +80,7 @@ namespace Todo.Services
             return _mapper.Map<TodoTaskResponseDTO>(task);
         }
 
-        public async Task<TodoTaskResponseDTO> UpdateTodoTaskAsync(int UserId, int id, TodoTaskRequestByIdDTO model)
+        public async Task<TodoTaskResponseDTO> UpdateTodoTaskAsync(string UserId, int id, TodoTaskRequestByIdDTO model)
         {
             if(id == model.TaskId)
             {

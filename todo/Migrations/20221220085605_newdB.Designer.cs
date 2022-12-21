@@ -12,7 +12,7 @@ using Todo.Models;
 namespace Todo.Migrations
 {
     [DbContext(typeof(DataAccessContext))]
-    [Migration("20221216154401_newdB")]
+    [Migration("20221220085605_newdB")]
     partial class newdB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

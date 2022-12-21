@@ -6,11 +6,11 @@ namespace Todo.Services
 {
     public interface ITodoTaskService
     {
-        public Task<List<TodoTask>> GetTodoTasksAsync(int UserId, FilterRequestDTO model);
-        public Task<TodoTaskResponseDTO> GetTodoTasksAsync(int UserId, int id);
-        public Task<TodoTaskResponseDTO> AddTodoTaskAsync(int UserId, TodoTaskRequestDTO model);
-        public Task<TodoTaskResponseDTO> UpdateTodoTaskAsync(int UserId, int id, TodoTaskRequestByIdDTO model);
-        public Task DeleteTodoTaskAsync(int UserId, int id);
-        public Task CompleteTaskAsync(int UserId, List<int> id);
+        public Task<List<TodoTask>> GetTodoTasksAsync(string UserId, FilterRequestDTO model);
+        public Task<TodoTaskResponseDTO> GetTodoTasksAsync(string UserId, int id);
+        public Task<TodoTaskResponseDTO> AddTodoTaskAsync(string UserId, TodoTaskRequestDTO model);
+        public Task<TodoTaskResponseDTO> UpdateTodoTaskAsync(string UserId, int id, TodoTaskRequestByIdDTO model);
+        public Task DeleteTodoTaskAsync(string UserId, int id);
+        public Task CompleteTaskAsync(string UserId, List<int> id);
     }    
 }

@@ -11,5 +11,6 @@ namespace Todo.Models
         [Required]
         public string LastName { get; set; }
         public ICollection<TodoTask> TodoTasks { get; set; }
+        public ICollection<Category> CategoryTasks { get; set; }
     }
 }

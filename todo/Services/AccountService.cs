@@ -42,7 +42,7 @@ namespace Todo.Services
             var result = await _signInManager.PasswordSignInAsync(
                 model.Email, model.Password, false, false);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
                 return string.Empty;
             }
@@ -50,7 +50,9 @@ namespace Todo.Services
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, model.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"]),
+                new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"])
             };
 
             var authenKey = new SymmetricSecurityKey(

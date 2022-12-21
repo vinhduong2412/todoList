@@ -15,7 +15,7 @@ namespace Todo.Models
         public string Description { get; set; }
         public int? CategoryId { get; set; }
         [ForeignKey("Categories")]
-        public int? Id { get; set; }
+        public string? Id { get; set; }
         [ForeignKey("Users")]   
         public DateTime? Date { get; set; }
     }
