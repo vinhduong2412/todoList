@@ -25,32 +25,32 @@ namespace Todo.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTodoTasks([FromQuery] FilterRequestDTO input)
         {
-            var UserId = HttpContext.User.Claims.Where(c 
-                => c.Type == ClaimTypes.NameIdentifier).Select(c 
-                => c.Value).FirstOrDefault();
-            return Ok(await _todoTaskService.GetTodoTasksAsync(UserId, input));
+            var userId = Guid.Parse(HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).FirstOrDefault());
+            return Ok(await _todoTaskService.GetTodoTasksAsync(userId, input));
         }
         [HttpGet("id")]
         public async Task<IActionResult> GetTaskById(int id)
         {
-                var UserId = HttpContext.User.Claims.Where(c
-                  => c.Type == ClaimTypes.NameIdentifier).Select(c
-                  => c.Value).FirstOrDefault();
-            var task = await _todoTaskService.GetTodoTasksAsync(UserId, id);
+            var userId = Guid.Parse(HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).FirstOrDefault());
+            var task = await _todoTaskService.GetTodoTasksAsync(userId, id);
             if(task == null)
             {
-                _logger.LogWarning("Task id not found");
-                return NotFound(new ErrorResponse("Task id not found"));
+                _logger.LogWarning("Task not found");
+                return NotFound(new ErrorResponse("Task not found"));
             }
             return Ok(task);
         }
         [HttpPost]
         public async Task<ActionResult<TodoTaskResponseDTO>> PostTask(TodoTaskRequestDTO input)
         {
-            var UserId = HttpContext.User.Claims.Where(c
-                => c.Type == ClaimTypes.NameIdentifier).Select(c
-                => c.Value).FirstOrDefault();
-            var newTask = await _todoTaskService.AddTodoTaskAsync(UserId, input);
+            var userId = Guid.Parse(HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).FirstOrDefault());
+            var newTask = await _todoTaskService.AddTodoTaskAsync(userId, input);
             if (newTask == null)
             {
                 _logger.LogWarning("Cannot add new task");
@@ -62,39 +62,50 @@ namespace Todo.Controllers
 
         public async Task<ActionResult<TodoTaskResponseDTO>> PutTask(int id, [FromBody] TodoTaskRequestByIdDTO input)
         {
-            var UserId = HttpContext.User.Claims.Where(c
-                => c.Type == ClaimTypes.NameIdentifier).Select(c
-                => c.Value).FirstOrDefault();
+            var userId = Guid.Parse(HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).FirstOrDefault());
             if (id != input.TaskId)
             {
                 _logger.LogWarning("Task id not found");
-                return NotFound(new ErrorResponse("Task id not found"));
+                return BadRequest(new ErrorResponse("Task id not found"));
             }
-            var updateTask = await _todoTaskService.UpdateTodoTaskAsync(UserId, id, input);
+            var updateTask = await _todoTaskService.UpdateTodoTaskAsync(userId, id, input);
+            if (updateTask == null)
+            {
+                _logger.LogWarning("Task not found");
+                return NotFound(new ErrorResponse("Task not found"));
+            }
             return Ok(updateTask);
         }
         [HttpDelete("{id}")]
 
-        public async Task<ActionResult> DeleteTask([FromRoute] int id, TodoTask model)
+        public async Task<ActionResult<TodoTaskResponseDTO>> DeleteTask([FromRoute] int id, TodoTask input)
         {
-            var UserId = HttpContext.User.Claims.Where(c
-                => c.Type == ClaimTypes.NameIdentifier).Select(c
-                => c.Value).FirstOrDefault();
-            if (id != model.TaskId)
+            var userId = Guid.Parse(HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).FirstOrDefault());
+            var task = await _todoTaskService.GetTodoTasksAsync(userId, id);
+            if (id != input.TaskId)
             {
-                _logger.LogWarning("Task id not found");
-                return NotFound(new ErrorResponse("Task id not found"));
+                _logger.LogDebug("Task id not found");
+                return BadRequest(new ErrorResponse("Task id not found"));
             }
-            await _todoTaskService.DeleteTodoTaskAsync(UserId, id);
-            return Ok("Delete successfully");
+            var deleteTask = await _todoTaskService.DeleteTodoTaskAsync(userId, id);
+            if (deleteTask == null)
+            {
+                _logger.LogDebug("Task not found");
+                return NotFound(new ErrorResponse("Task not found"));
+            }
+            return Ok(deleteTask);
         }
         [HttpPatch("tasks/complete")]
         public async Task<IActionResult> CompleteTask([FromBody] List<int> id)
         {
-            var UserId = HttpContext.User.Claims.Where(c
-                => c.Type == ClaimTypes.NameIdentifier).Select(c
-                => c.Value).FirstOrDefault();
-            await _todoTaskService.CompleteTaskAsync(UserId, id);
+            var userId = Guid.Parse(HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                .Select(c => c.Value).FirstOrDefault());
+            await _todoTaskService.CompleteTaskAsync(userId, id);
             return Ok("Task completed");
         }
     }

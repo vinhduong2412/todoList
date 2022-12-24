@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Todo.DTOs;
 using Todo.Models;
@@ -23,10 +24,10 @@ namespace Todo.Controllers
         }
 
         [HttpPost("SignUp")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpRequestDTO input)
+        public async Task<ActionResult<UserResponse>> SignUp([FromBody] SignUpRequestDTO input)
         {
             var newUser = await _accountService.SignUpAsync(input);
-            return Ok(newUser);
+            return newUser;
         }
         [HttpPost("SignIn")]
         public async Task<IActionResult> SignIn([FromBody] SignInRequestDTO input)

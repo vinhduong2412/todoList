@@ -27,9 +27,8 @@ namespace Todo.Services
             _mapper = mapper;
             _context = context;
         }
-        public async Task<IdentityResult> SignUpAsync(SignUpRequestDTO input)
-        {
-               
+        public async Task<UserResponse> SignUpAsync(SignUpRequestDTO input)
+        {  
             var user = new User
             {
                 FirstName = input.FirstName,
@@ -37,7 +36,8 @@ namespace Todo.Services
                 Email = input.Email,
                 UserName = input.Email
             };
-            return await _userManager.CreateAsync(user, input.Password);
+            await _userManager.CreateAsync(user, input.Password);
+            return _mapper.Map<UserResponse>(input);
         }
         public async Task<string> SignInAsync(SignInRequestDTO model)
         {

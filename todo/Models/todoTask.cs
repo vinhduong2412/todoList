@@ -13,11 +13,11 @@ namespace Todo.Models
         public string Title { get; set; }
         public bool? Status { get; set; }
         [MaxLength(100)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [ForeignKey("Categories")]
         public int? CategoryId { get; set; }
         [ForeignKey("Users")]
-        public string? Id { get; set; }
+        public Guid? Id { get; set; }
         
         public DateTime? Date { get; set; }
     }

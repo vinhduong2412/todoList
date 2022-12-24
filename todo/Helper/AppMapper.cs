@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Todo.Models;
 using Todo.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace Todo.Helper
 {
@@ -18,6 +19,7 @@ namespace Todo.Helper
             CreateMap<TodoTask, TodoTaskResponseDTO>().ReverseMap();
             CreateMap<TodoTask, TodoTaskRequestByIdDTO>().ReverseMap();
             CreateMap<TodoTask, FilterRequestDTO>().ReverseMap();
+            CreateMap<SignUpRequestDTO, UserResponse>().ReverseMap();
         }
     }
 }
