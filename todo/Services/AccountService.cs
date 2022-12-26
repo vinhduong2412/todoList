@@ -7,6 +7,7 @@ using Todo.Models;
 using Todo.DTOs;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Todo.Services
 {
@@ -71,6 +72,16 @@ namespace Todo.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<UserResponse> CheckEmail(string email)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(c => c.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+            return _mapper.Map<UserResponse>(user);
         }
     }
 }

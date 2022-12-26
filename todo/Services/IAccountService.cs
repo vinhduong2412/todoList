@@ -9,5 +9,6 @@ namespace Todo.Services
     {
         Task<UserResponse> SignUpAsync(SignUpRequestDTO model);
         Task<string> SignInAsync(SignInRequestDTO model);
+        Task<UserResponse> CheckEmail(string email);
     }
 }

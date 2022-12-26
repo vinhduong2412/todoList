@@ -26,6 +26,12 @@ namespace Todo.Controllers
         [HttpPost("SignUp")]
         public async Task<ActionResult<UserResponse>> SignUp([FromBody] SignUpRequestDTO input)
         {
+            var user = await _accountService.CheckEmail(input.Email);
+            if (user != null)
+            {
+                _logger.LogWarning("Email used");
+                return BadRequest(new ErrorResponse("This email has been used"));
+            }
             var newUser = await _accountService.SignUpAsync(input);
             return newUser;
         }
