@@ -34,15 +34,18 @@ namespace Todo.Controllers
             return newUser;
         }
         [HttpPost("SignIn")]
-        public async Task<IActionResult> SignIn([FromBody] SignInRequestDTO input)
+        public async Task<ActionResult<AuthenticateUserResponseDTO>> SignIn([FromBody] SignInRequestDTO input)
         {
-            var result = await _accountService.SignInAsync(input);
-            if (result == null)
+            var AccessToken = await _accountService.SignInAsync(input);
+            if (AccessToken == null)
             {
                 _logger.LogInformation("Account does not exist");
                 return BadRequest(new ErrorResponse("Account not existed"));
             }
-            return Ok(result);
+            return Ok(new AuthenticateUserResponseDTO()
+            {
+                AccessToken = AccessToken
+            });
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Todo.Models
         [ForeignKey("Categories")]
         public int? CategoryId { get; set; }
         [ForeignKey("Users")]
-        public Guid? Id { get; set; }
+        public Guid? UserId { get; set; }
         public DateTime? Date { get; set; }
     }
 }

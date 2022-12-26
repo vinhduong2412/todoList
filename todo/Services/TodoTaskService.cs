@@ -22,7 +22,7 @@ namespace Todo.Services
             //var newTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
             //    => c.Id == userId);
             var newTask = _mapper.Map<TodoTaskRequestDTO,TodoTask>(model);
-            newTask.Id = userId;
+            newTask.UserId = userId;
             _context.TodoTasks.Add(newTask);
             await _context.SaveChangesAsync();
 
@@ -32,7 +32,7 @@ namespace Todo.Services
         public async Task CompleteTaskAsync(Guid userId, List<int> id)
         {
             var task = await _context.TodoTasks.Where(c 
-                => id.Contains(c.TaskId) && c.Id == userId).ToListAsync();
+                => id.Contains(c.TaskId) && c.UserId == userId).ToListAsync();
             foreach (var x in task)
             {
                 x.Status = Done;
@@ -44,7 +44,7 @@ namespace Todo.Services
         public async Task<TodoTaskResponseDTO> DeleteTodoTaskAsync(Guid userId, int id)
         {
             var deleteTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
-                => c.Id == userId && c.TaskId == id);
+                => c.UserId == userId && c.TaskId == id);
             if(deleteTask == null)
             {
                 return null; 
@@ -56,7 +56,7 @@ namespace Todo.Services
 
         public async Task<List<TodoTaskResponseDTO>> GetTodoTasksAsync(Guid userId, FilterRequestDTO queryParams)
         {
-            var query = _context.TodoTasks.Where(c => c.Id == userId);
+            var query = _context.TodoTasks.Where(c => c.UserId == userId);
             if (queryParams.Status != null)
             {
                 query = query.Where(t => t.Status == queryParams.Status);
@@ -70,7 +70,7 @@ namespace Todo.Services
         }
         public async Task<TodoTaskResponseDTO> GetTodoTasksAsync(Guid userId, int id)
         {
-            var task = await _context.TodoTasks.FirstOrDefaultAsync(c => c.Id == userId && c.TaskId == id);
+            var task = await _context.TodoTasks.FirstOrDefaultAsync(c => c.UserId == userId && c.TaskId == id);
             if (task == null)
             {
                 return null;
@@ -81,7 +81,7 @@ namespace Todo.Services
         public async Task<TodoTaskResponseDTO> UpdateTodoTaskAsync(Guid userId, int id, TodoTaskRequestByIdDTO model)
         {
              var updateTask = await _context.TodoTasks.FirstOrDefaultAsync(c 
-                 => c.Id == userId && c.TaskId == id);
+                 => c.UserId == userId && c.TaskId == id);
              if (updateTask == null)
              {
                     return null;
