@@ -88,13 +88,13 @@ namespace Todo.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("userId")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
@@ -110,26 +110,26 @@ namespace Todo.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("userId")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<string>("userId")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("userId", "RoleId");
+                    b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
@@ -138,7 +138,7 @@ namespace Todo.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<string>("userId")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
@@ -150,7 +150,7 @@ namespace Todo.Migrations
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("userId", "LoginProvider", "Name");
+                    b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
@@ -167,12 +167,12 @@ namespace Todo.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("userId")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CategoryId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Categories");
 
@@ -229,12 +229,11 @@ namespace Todo.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool?>("Status")
                         .HasColumnType("bit");
@@ -244,16 +243,16 @@ namespace Todo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("userId")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("TaskId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("todoTasks");
+                    b.ToTable("TodoTasks");
                 });
 
             modelBuilder.Entity("Todo.Models.User", b =>
@@ -342,7 +341,7 @@ namespace Todo.Migrations
                 {
                     b.HasOne("Todo.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -351,7 +350,7 @@ namespace Todo.Migrations
                 {
                     b.HasOne("Todo.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -366,7 +365,7 @@ namespace Todo.Migrations
 
                     b.HasOne("Todo.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -375,7 +374,7 @@ namespace Todo.Migrations
                 {
                     b.HasOne("Todo.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -384,23 +383,23 @@ namespace Todo.Migrations
                 {
                     b.HasOne("Todo.Models.User", null)
                         .WithMany("CategoryTasks")
-                        .HasForeignKey("userId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Todo.Models.TodoTask", b =>
                 {
                     b.HasOne("Todo.Models.Category", null)
-                        .WithMany("todoTasks")
+                        .WithMany("TodoTasks")
                         .HasForeignKey("CategoryId");
 
                     b.HasOne("Todo.Models.User", null)
                         .WithMany("TodoTasks")
-                        .HasForeignKey("userId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Todo.Models.Category", b =>
                 {
-                    b.Navigation("todoTasks");
+                    b.Navigation("TodoTasks");
                 });
 
             modelBuilder.Entity("Todo.Models.User", b =>

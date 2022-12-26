@@ -12,14 +12,12 @@ namespace Todo.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        private readonly IMapper _mapper;
         private readonly ILogger<AccountsController> _logger;
 
-        public AccountsController(IAccountService accountService, IMapper mapper, 
+        public AccountsController(IAccountService accountService, 
             ILogger<AccountsController> logger)
         {
             _accountService = accountService;
-            _mapper = mapper;
             _logger = logger;   
         }
 
@@ -29,7 +27,7 @@ namespace Todo.Controllers
             var user = await _accountService.CheckEmail(input.Email);
             if (user != null)
             {
-                _logger.LogWarning("Email used");
+                _logger.LogInformation("Email used");
                 return BadRequest(new ErrorResponse("This email has been used"));
             }
             var newUser = await _accountService.SignUpAsync(input);
@@ -41,7 +39,7 @@ namespace Todo.Controllers
             var result = await _accountService.SignInAsync(input);
             if (result == null)
             {
-                _logger.LogWarning("Account does not exist");
+                _logger.LogInformation("Account does not exist");
                 return BadRequest(new ErrorResponse("Account not existed"));
             }
             return Ok(result);

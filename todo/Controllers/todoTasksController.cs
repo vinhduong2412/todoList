@@ -39,7 +39,7 @@ namespace Todo.Controllers
             var task = await _todoTaskService.GetTodoTasksAsync(userId, id);
             if(task == null)
             {
-                _logger.LogWarning("Task not found");
+                _logger.LogInformation("Task not found");
                 return NotFound(new ErrorResponse("Task not found"));
             }
             return Ok(task);
@@ -53,7 +53,7 @@ namespace Todo.Controllers
             var newTask = await _todoTaskService.AddTodoTaskAsync(userId, input);
             if (newTask == null)
             {
-                _logger.LogWarning("Cannot add new task");
+                _logger.LogInformation("Cannot add new task");
                 return BadRequest(new ErrorResponse("Cannot add new task"));
             }
             return Ok(newTask);
@@ -67,13 +67,13 @@ namespace Todo.Controllers
                 .Select(c => c.Value).FirstOrDefault());
             if (id != input.TaskId)
             {
-                _logger.LogWarning("Task id not found");
+                _logger.LogInformation("Task id not found");
                 return BadRequest(new ErrorResponse("Task id not found"));
             }
             var updateTask = await _todoTaskService.UpdateTodoTaskAsync(userId, id, input);
             if (updateTask == null)
             {
-                _logger.LogWarning("Task not found");
+                _logger.LogInformation("Task not found");
                 return NotFound(new ErrorResponse("Task not found"));
             }
             return Ok(updateTask);
@@ -88,16 +88,16 @@ namespace Todo.Controllers
             var task = await _todoTaskService.GetTodoTasksAsync(userId, id);
             if (id != input.TaskId)
             {
-                _logger.LogDebug("Task id not found");
+                _logger.LogInformation("Task id not found");
                 return BadRequest(new ErrorResponse("Task id not found"));
             }
             var deleteTask = await _todoTaskService.DeleteTodoTaskAsync(userId, id);
             if (deleteTask == null)
             {
-                _logger.LogDebug("Task not found");
+                _logger.LogInformation("Task not found");
                 return NotFound(new ErrorResponse("Task not found"));
             }
-            return Ok(deleteTask);
+            return Ok(task);
         }
         [HttpPatch("tasks/complete")]
         public async Task<IActionResult> CompleteTask([FromBody] List<int> id)

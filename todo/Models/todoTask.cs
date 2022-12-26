@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Todo.Models
 {
-    [Table("todoTasks")]
+    [Table("TodoTasks")]
     public class TodoTask
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int TaskId { get; set; }
         [MaxLength(100)]
@@ -18,7 +17,6 @@ namespace Todo.Models
         public int? CategoryId { get; set; }
         [ForeignKey("Users")]
         public Guid? Id { get; set; }
-        
         public DateTime? Date { get; set; }
     }
 }

@@ -54,10 +54,9 @@ namespace Todo.Services
             return _mapper.Map<TodoTaskResponseDTO>(deleteTask);
         }
 
-        public async Task<List<TodoTask>> GetTodoTasksAsync(Guid userId, FilterRequestDTO queryParams)
+        public async Task<List<TodoTaskResponseDTO>> GetTodoTasksAsync(Guid userId, FilterRequestDTO queryParams)
         {
             var query = _context.TodoTasks.Where(c => c.Id == userId);
-            
             if (queryParams.Status != null)
             {
                 query = query.Where(t => t.Status == queryParams.Status);
@@ -66,7 +65,8 @@ namespace Todo.Services
             {
                 query = query.Where(c => c.Date == queryParams.Date);
             }
-            return await query.ToListAsync();
+            await query.ToListAsync();
+            return _mapper.Map<List<TodoTaskResponseDTO>>(query);
         }
         public async Task<TodoTaskResponseDTO> GetTodoTasksAsync(Guid userId, int id)
         {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Todo.DTOs;
 using Todo.Services;
 
 namespace Todo.Controllers
@@ -17,7 +18,7 @@ namespace Todo.Controllers
             _logger = logger;
         }
         [HttpGet("categories")]
-        public async Task<IActionResult> GetCategory()
+        public async Task<ActionResult<CategoryResponseDTO>> GetCategory()
         {
             try
             {
@@ -25,7 +26,7 @@ namespace Todo.Controllers
             }
             catch
             {
-                _logger.LogWarning("Internal Server Error");
+                _logger.LogInformation("Internal Server Error");
                 return StatusCode(500);
             }
         }
